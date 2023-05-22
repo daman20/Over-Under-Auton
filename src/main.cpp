@@ -9,7 +9,7 @@ Controller controller;
 
 std::shared_ptr<ChassisController> myChassis =
   ChassisControllerBuilder()
-    .withMotors({1, -2}, {3, -4})
+    .withMotors({1, -2}, {10, -9})
     // Green gearset, 4 in wheel diam, 11.5 in wheel track
     .withDimensions(AbstractMotor::gearset::green, {{4.25_in, 11.5_in}, imev5GreenTPR})
     // TODO: SET UP AND TUNE PID??????
@@ -110,6 +110,18 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	myChassis->getModel()->tank(controller.getAnalog(ControllerAnalog::leftY),
+  std::shared_ptr<ChassisController> drive = myChassis;
+  ControllerButton runAutoButton(ControllerDigital::X);
+  while(true){
+	  myChassis->getModel()->tank(controller.getAnalog(ControllerAnalog::leftY),
                                 controller.getAnalog(ControllerAnalog::rightY));
+            // Run the test autonomous routine if we press the button
+    if (runAutoButton.changedToPressed()) {
+        // Drive the robot in a square pattern using closed-loop control
+        for (int i = 0; i < 4; i++) {
+            drive->moveDistance(12_in); // Drive forward 12 inches
+            drive->turnAngle(90_deg);   // Turn in place 90 degrees
+        }
+    }
+  }
 }
