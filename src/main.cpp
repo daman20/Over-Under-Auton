@@ -1,11 +1,15 @@
 #include "main.h"
 
+// OKAPILIB Controller
+Controller controller;
+
 
 // OKAPILIB Chassis, keep global so it can be used throuhgout the program
 
+
 std::shared_ptr<ChassisController> myChassis =
   ChassisControllerBuilder()
-    .withMotors({1, -3}, {-2, 13})
+    .withMotors({1, -2}, {3, -4})
     // Green gearset, 4 in wheel diam, 11.5 in wheel track
     .withDimensions(AbstractMotor::gearset::green, {{4.25_in, 11.5_in}, imev5GreenTPR})
     // TODO: SET UP AND TUNE PID??????
@@ -106,7 +110,6 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	Controller controller;
 	myChassis->getModel()->tank(controller.getAnalog(ControllerAnalog::leftY),
                                 controller.getAnalog(ControllerAnalog::rightY));
 }
