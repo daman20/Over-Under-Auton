@@ -9,7 +9,7 @@ Controller controller;
 
 std::shared_ptr<ChassisController> myChassis =
   ChassisControllerBuilder()
-    .withMotors({1, -2}, {10, -9})
+    .withMotors({10, -9}, {-1, 2})
     // Green gearset, 4 in wheel diam, 11.5 in wheel track
     .withDimensions(AbstractMotor::gearset::green, {{4.25_in, 11.5_in}, imev5GreenTPR})
     // TODO: SET UP AND TUNE PID??????
@@ -52,12 +52,12 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	pros::lcd::initialize();
-	pros::lcd::set_text(1, "Hello PROS User!");
-
-	pros::lcd::register_btn1_cb(on_center_button);
+  
+	myChassis->getModel()->setBrakeMode(AbstractMotor::brakeMode::coast);
+  // tank drive
+  
+  pros::lcd::initialize();
 }
-
 /**
  * Runs while the robot is in the disabled state of Field Management System or
  * the VEX Competition Switch, following either autonomous or opcontrol. When
@@ -89,10 +89,10 @@ void competition_initialize() {}
  */
 void autonomous() {
 	profileController->generatePath({
-    {1_ft, 7_ft, 0_deg},
-    {3_ft, 7_ft, 0_deg},
-    {3_ft, 5_ft, 0_deg}},"test");
-	profileController->setTarget("test");
+    {106_in, 14_in, 0_deg},
+    {128_in, 13_in, 0_deg}},
+    "goToMatchLoadZone1");
+	profileController->setTarget("goToMatchLoadZone1");
 	profileController->waitUntilSettled();
 }
 
@@ -110,18 +110,11 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-  std::shared_ptr<ChassisController> drive = myChassis;
-  ControllerButton runAutoButton(ControllerDigital::X);
-  while(true){
-	  myChassis->getModel()->tank(controller.getAnalog(ControllerAnalog::leftY),
-                                controller.getAnalog(ControllerAnalog::rightY));
-            // Run the test autonomous routine if we press the button
-    if (runAutoButton.changedToPressed()) {
-        // Drive the robot in a square pattern using closed-loop control
-        for (int i = 0; i < 4; i++) {
-            drive->moveDistance(12_in); // Drive forward 12 inches
-            drive->turnAngle(90_deg);   // Turn in place 90 degrees
-        }
-    }
+  myChassis->getModel()->setBrakeMode(AbstractMotor::brakeMode::coast);
+  // tank drive
+  while (true) {
+    myChassis->getModel()->tank(controller.getAnalog(ControllerAnalog::leftY),
+                                  controller.getAnalog(ControllerAnalog::rightY));
+    pros::delay(20);
   }
 }
