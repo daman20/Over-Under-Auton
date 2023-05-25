@@ -1,11 +1,16 @@
 #include "main.h"
 
-// OKAPILIB Controller
+
+
+// SECTION: DEVICE CONFIGURATION, keep global so it can be used throuhgout the program
+
+
+// Okapilib Controller
 Controller controller;
 
 
-// OKAPILIB Chassis, keep global so it can be used throuhgout the program
 
+// okapilib Chassis
 
 std::shared_ptr<ChassisController> myChassis =
   ChassisControllerBuilder()
@@ -28,6 +33,11 @@ std::shared_ptr<AsyncMotionProfileController> profileController =
 
 // end OKAPILIB Chassis
 
+// catapult motor
+Motor catapult(11, false, AbstractMotor::gearset::red, AbstractMotor::encoderUnits::degrees);
+
+// catapult touch sensor (to figure out of it is down)
+auto catapultLimitSwitch = ADIButton('A', false);
 
 /**
  * A callback function for LLEMU's center button.
@@ -111,10 +121,41 @@ void autonomous() {
  */
 void opcontrol() {
   myChassis->getModel()->setBrakeMode(AbstractMotor::brakeMode::coast);
+  ControllerButton runCat(ControllerDigital::X);
+  catapult.setBrakeMode(AbstractMotor::brakeMode::coast);
   // tank drive
+  
   while (true) {
     myChassis->getModel()->tank(controller.getAnalog(ControllerAnalog::leftY),
                                   controller.getAnalog(ControllerAnalog::rightY));
+            // run the catapult when X is pressed
+        if (runCat.isPressed()) {
+            catapult.moveAbsolute(-150, 100);
+            pros::delay(100);
+        }
+        else {
+            catapult.moveAbsolute(0, 100);
+            pros::delay(100);
+        }
+
     pros::delay(20);
+    
+  }
+
+}
+
+// SECTION: FUNCTIONS
+
+/*
+ * @brief: catapult control function
+ * @param: number of times to launch
+*/
+void launch(int numLaunches = 1) {
+  for (int i = 0; i < numLaunches; i++) {
+    while(!catapultLimitSwitch.isPressed()) {
+      catapult.moveVelocity(100);
+      pros::delay(20);
+    }
+    catapult.moveVelocity(0);
   }
 }
