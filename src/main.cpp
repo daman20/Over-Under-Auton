@@ -14,7 +14,7 @@ Controller controller;
 
 // okapilib Chassis
 
-std::shared_ptr<OdomChassisController> myChassis =
+std::shared_ptr<OdomChassisController> chassis =
   ChassisControllerBuilder()
     .withMotors({10, -9}, {-1, 2})
     // blue gearset, 4 in wheel diam, 11.5 in wheel track
@@ -31,7 +31,7 @@ std::shared_ptr<AsyncMotionProfileController> profileController =
       2.0, // Maximum linear acceleration of the Chassis in m/s/s
       10.0 // Maximum linear jerk of the Chassis in m/s/s/s
     })
-    .withOutput(myChassis)
+    .withOutput(chassis)
     .buildMotionProfileController();
 
 // end OKAPILIB Chassis
@@ -57,7 +57,7 @@ auto acornTouch = OpticalSensor(5, OpticalSensorOutput::hue, true);
  * @param: number of times to launch
 */
 void launch(int numLaunches = 1) {
-  myChassis->turnToPoint(goalLocation); // AIMBOT: turn to face the goal
+  chassis->turnToPoint(goalLocation); // AIMBOT: turn to face the goal
   
   for (int i = 0; i < numLaunches; i++) { //repeat for the number of times to launch
     catapult.moveRelative(50, 100); // move the catapult up 50 degrees so that the acorn is launched
@@ -97,7 +97,7 @@ void on_center_button() {
  */
 void initialize() {
   
-	myChassis->getModel()->setBrakeMode(AbstractMotor::brakeMode::coast);
+	chassis->getModel()->setBrakeMode(AbstractMotor::brakeMode::coast);
   // tank drive
   
   pros::lcd::initialize();
@@ -160,12 +160,12 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-  myChassis->getModel()->setBrakeMode(AbstractMotor::brakeMode::brake);
+  chassis->getModel()->setBrakeMode(AbstractMotor::brakeMode::brake);
   ControllerButton runCat(ControllerDigital::X);
   catapult.setBrakeMode(AbstractMotor::brakeMode::coast);
   // tank drive
   while (true) {
-    myChassis->getModel()->tank(controller.getAnalog(ControllerAnalog::leftY),
+    chassis->getModel()->tank(controller.getAnalog(ControllerAnalog::leftY),
                                   controller.getAnalog(ControllerAnalog::rightY));
             // run the catapult when X is pressed
         if (runCat.isPressed()) {
