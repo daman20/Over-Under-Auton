@@ -34,10 +34,16 @@ std::shared_ptr<AsyncMotionProfileController> profileController =
 // end OKAPILIB Chassis
 
 // catapult motor
-Motor catapult(11, false, AbstractMotor::gearset::red, AbstractMotor::encoderUnits::degrees);
+Motor catapult(11, true, AbstractMotor::gearset::red, AbstractMotor::encoderUnits::degrees);
 
 // catapult touch sensor (to figure out of it is down)
 auto catapultLimitSwitch = ADIButton('A', false);
+
+// intake motor
+Motor intake(3, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+
+// acorn touch sensor to detect whether or not an acorn is loaded
+auto acornTouch = OpticalSensor(5, OpticalSensorOutput::hue, true);
 
 /**
  * A callback function for LLEMU's center button.
@@ -104,6 +110,12 @@ void autonomous() {
     "goToMatchLoadZone1");
 	profileController->setTarget("goToMatchLoadZone1");
 	profileController->waitUntilSettled();
+  // launch acorns as they are loaded
+  while(true){
+    if (acornTouch.getHue() < 100 && acornTouch.getHue() > 80) {
+      launch();
+    }
+  }
 }
 
 /**
@@ -120,21 +132,20 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-  myChassis->getModel()->setBrakeMode(AbstractMotor::brakeMode::coast);
+  myChassis->getModel()->setBrakeMode(AbstractMotor::brakeMode::brake);
   ControllerButton runCat(ControllerDigital::X);
   catapult.setBrakeMode(AbstractMotor::brakeMode::coast);
   // tank drive
-  
   while (true) {
     myChassis->getModel()->tank(controller.getAnalog(ControllerAnalog::leftY),
                                   controller.getAnalog(ControllerAnalog::rightY));
             // run the catapult when X is pressed
         if (runCat.isPressed()) {
-            catapult.moveAbsolute(-150, 100);
+            catapult.moveVelocity(20);
             pros::delay(100);
         }
         else {
-            catapult.moveAbsolute(0, 100);
+            catapult.moveVoltage(0);
             pros::delay(100);
         }
 
