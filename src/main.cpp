@@ -2,7 +2,7 @@
 
 
 
-// SECTION: DEVICE CONFIGURATION, keep global so it can be used throuhgout the program
+// SECTION: DEVICE CONFIGURATION
 
 
 // Okapilib Controller
@@ -15,8 +15,8 @@ Controller controller;
 std::shared_ptr<ChassisController> myChassis =
   ChassisControllerBuilder()
     .withMotors({10, -9}, {-1, 2})
-    // Green gearset, 4 in wheel diam, 11.5 in wheel track
-    .withDimensions(AbstractMotor::gearset::green, {{4.25_in, 11.5_in}, imev5GreenTPR})
+    // blue gearset, 4 in wheel diam, 11.5 in wheel track
+    .withDimensions(AbstractMotor::gearset::blue, {{4.25_in, 11.5_in}, imev5GreenTPR})
     // TODO: SET UP AND TUNE PID??????
     .withMaxVelocity(100)
     .build();
@@ -44,6 +44,27 @@ Motor intake(3, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnit
 
 // acorn touch sensor to detect whether or not an acorn is loaded
 auto acornTouch = OpticalSensor(5, OpticalSensorOutput::hue, true);
+
+// END SECTION: DEVICE CONFIGURATION
+
+// START SECTION: HELPER FUNCTIONS
+
+/*
+ * @brief: catapult control function
+ * @param: number of times to launch
+*/
+void launch(int numLaunches = 1) {
+  for (int i = 0; i < numLaunches; i++) {
+    while(!catapultLimitSwitch.isPressed()) {
+      catapult.moveVelocity(100);
+      pros::delay(20);
+    }
+    catapult.moveVelocity(0);
+  }
+}
+
+// END SECTION: HELPER FUNCTIONS
+
 
 /**
  * A callback function for LLEMU's center button.
@@ -155,18 +176,3 @@ void opcontrol() {
 
 }
 
-// SECTION: FUNCTIONS
-
-/*
- * @brief: catapult control function
- * @param: number of times to launch
-*/
-void launch(int numLaunches = 1) {
-  for (int i = 0; i < numLaunches; i++) {
-    while(!catapultLimitSwitch.isPressed()) {
-      catapult.moveVelocity(100);
-      pros::delay(20);
-    }
-    catapult.moveVelocity(0);
-  }
-}
