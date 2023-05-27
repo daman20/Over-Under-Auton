@@ -16,10 +16,11 @@ std::shared_ptr<ChassisController> myChassis =
   ChassisControllerBuilder()
     .withMotors({10, -9}, {-1, 2})
     // blue gearset, 4 in wheel diam, 11.5 in wheel track
-    .withDimensions(AbstractMotor::gearset::blue, {{4.25_in, 11.5_in}, imev5GreenTPR})
+    .withDimensions(AbstractMotor::gearset::blue, {{4.25_in, 11.5_in}, imev5BlueTPR})
     // TODO: SET UP AND TUNE PID??????
     .withMaxVelocity(100)
-    .build();
+    .withOdometry()
+    .buildOdometry();
 
 std::shared_ptr<AsyncMotionProfileController> profileController = 
   AsyncMotionProfileControllerBuilder()
@@ -54,12 +55,14 @@ auto acornTouch = OpticalSensor(5, OpticalSensorOutput::hue, true);
  * @param: number of times to launch
 */
 void launch(int numLaunches = 1) {
-  for (int i = 0; i < numLaunches; i++) {
-    while(!catapultLimitSwitch.isPressed()) {
-      catapult.moveVelocity(100);
-      pros::delay(20);
+  for (int i = 0; i < numLaunches; i++) { //repeat for the number of times to launch
+    catapult.moveRelative(50, 100); // move the catapult up 50 degrees so that the acorn is launched
+    // RELOAD: move the catapult down until the limit switch is pressed
+    while(!catapultLimitSwitch.isPressed()) { // check if the limit switch is not pressed, meaning the catapult isn't down
+      catapult.moveVelocity(100); // move the catapult down
+      pros::delay(20); //delay to not overload
     }
-    catapult.moveVelocity(0);
+    catapult.moveVelocity(0); // stop the catapult when done
   }
 }
 
