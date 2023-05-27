@@ -1,6 +1,8 @@
 #include "main.h"
 
+// SECTION: CONSTANTS
 
+auto goalLocation = Point{0_in, 0_in};
 
 // SECTION: DEVICE CONFIGURATION
 
@@ -12,7 +14,7 @@ Controller controller;
 
 // okapilib Chassis
 
-std::shared_ptr<ChassisController> myChassis =
+std::shared_ptr<OdomChassisController> myChassis =
   ChassisControllerBuilder()
     .withMotors({10, -9}, {-1, 2})
     // blue gearset, 4 in wheel diam, 11.5 in wheel track
@@ -55,6 +57,8 @@ auto acornTouch = OpticalSensor(5, OpticalSensorOutput::hue, true);
  * @param: number of times to launch
 */
 void launch(int numLaunches = 1) {
+  myChassis->turnToPoint(goalLocation); // AIMBOT: turn to face the goal
+  
   for (int i = 0; i < numLaunches; i++) { //repeat for the number of times to launch
     catapult.moveRelative(50, 100); // move the catapult up 50 degrees so that the acorn is launched
     // RELOAD: move the catapult down until the limit switch is pressed
