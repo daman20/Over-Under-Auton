@@ -3,6 +3,8 @@
 // SECTION: CONSTANTS
 
 auto goalLocation = Point{0_in, 0_in};
+auto startingState = OdomState{0_in, 0_in, 0_deg};
+auto matchLoadZone1 = Point{106_in, 14_in};
 
 // SECTION: DEVICE CONFIGURATION
 
@@ -58,7 +60,7 @@ auto acornTouch = OpticalSensor(5, OpticalSensorOutput::hue, true);
 */
 void launch(int numLaunches = 1) {
   chassis->turnToPoint(goalLocation); // AIMBOT: turn to face the goal
-  
+
   for (int i = 0; i < numLaunches; i++) { //repeat for the number of times to launch
     catapult.moveRelative(50, 100); // move the catapult up 50 degrees so that the acorn is launched
     // RELOAD: move the catapult down until the limit switch is pressed
@@ -97,10 +99,11 @@ void on_center_button() {
  */
 void initialize() {
   
-	chassis->getModel()->setBrakeMode(AbstractMotor::brakeMode::coast);
-  // tank drive
+	chassis->getModel()->setBrakeMode(AbstractMotor::brakeMode::coast); // chassis braking mode
   
-  pros::lcd::initialize();
+  pros::lcd::initialize(); // set up screen
+
+  chassis->setState(startingState);
 }
 /**
  * Runs while the robot is in the disabled state of Field Management System or
@@ -132,12 +135,7 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-	profileController->generatePath({
-    {106_in, 14_in, 0_deg},
-    {128_in, 13_in, 0_deg}},
-    "goToMatchLoadZone1");
-	profileController->setTarget("goToMatchLoadZone1");
-	profileController->waitUntilSettled();
+	chassis->driveToPoint(matchLoadZone1); // drive to the match load zone
   // launch acorns as they are loaded
   while(true){
     if (acornTouch.getHue() < 100 && acornTouch.getHue() > 80) {
