@@ -72,6 +72,15 @@ void launch(int numLaunches = 1) {
   }
 }
 
+void matchLoadAutoLaunch(){
+  chassis->driveToPoint(matchLoadZone1); // drive to the match load zone
+  // launch acorns as they are loaded
+  while(true){
+    if (acornTouch.getHue() < 100 && acornTouch.getHue() > 80) {
+      launch();
+    }
+  }
+}
 // END SECTION: HELPER FUNCTIONS
 
 
@@ -135,13 +144,8 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-	chassis->driveToPoint(matchLoadZone1); // drive to the match load zone
-  // launch acorns as they are loaded
-  while(true){
-    if (acornTouch.getHue() < 100 && acornTouch.getHue() > 80) {
-      launch();
-    }
-  }
+	pros::lcd::set_text(1, "Autonomous");
+  matchLoadAutoLaunch();
 }
 
 /**
