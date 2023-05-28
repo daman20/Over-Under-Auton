@@ -76,7 +76,7 @@ void matchLoadAutoLaunch(){
   chassis->driveToPoint(matchLoadZone1); // drive to the match load zone
   // launch acorns as they are loaded
   while(true){
-    if (acornTouch.getHue() < 100 && acornTouch.getHue() > 80) {
+    if (acornTouch.getHue() < 100 && acornTouch.getHue() > 80) { // if it is green
       launch();
     }
   }
