@@ -169,14 +169,9 @@ void opcontrol() {
   while (true) {
     chassis->getModel()->tank(controller.getAnalog(ControllerAnalog::leftY),
                                   controller.getAnalog(ControllerAnalog::rightY));
-            // run the catapult when X is pressed
-        if (runCat.isPressed()) {
-            catapult.moveVelocity(20);
-            pros::delay(100);
-        }
-        else {
-            catapult.moveVoltage(0);
-            pros::delay(100);
+        // run the catapult when X is pressed
+        if (runCat.changedToPressed()) {
+          launch();
         }
 
     pros::delay(20);
