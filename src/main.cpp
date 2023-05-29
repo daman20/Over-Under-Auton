@@ -48,7 +48,7 @@ auto catapultLimitSwitch = ADIButton('A', false);
 Motor intake(3, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
 
 // acorn touch sensor to detect whether or not an acorn is loaded
-auto acornTouch = OpticalSensor(5, OpticalSensorOutput::hue, true);
+auto acornLoad = OpticalSensor(5, OpticalSensorOutput::hue, true);
 
 // END SECTION: DEVICE CONFIGURATION
 
@@ -76,7 +76,7 @@ void matchLoadAutoLaunch(){
   chassis->driveToPoint(matchLoadZone1); // drive to the match load zone
   // launch acorns as they are loaded
   while(true){
-    if (acornTouch.getHue() < 100 && acornTouch.getHue() > 80) { // if it is green
+    if (acornLoad.getHue() < 100 && acornLoad.getHue() > 80) { // if it is green
       launch();
     }
   }
