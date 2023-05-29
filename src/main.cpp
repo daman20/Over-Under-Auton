@@ -19,13 +19,14 @@ Controller controller;
 std::shared_ptr<OdomChassisController> chassis =
   ChassisControllerBuilder()
     .withMotors({10, -9}, {-1, 2})
-    // blue gearset, 4 in wheel diam, 11.5 in wheel track
+    // blue gearset, 4 in wheel diam, 11.5 in wheel track (center-to-center distance between the wheels (center-to-center meaning the width between the centers of both wheels))
     .withDimensions(AbstractMotor::gearset::blue, {{4.25_in, 11.5_in}, imev5BlueTPR})
     // TODO: SET UP AND TUNE PID??????
     .withMaxVelocity(100)
     .withOdometry()
     .buildOdometry();
 
+// profile controller for autonomous to allow for preplanned routes
 std::shared_ptr<AsyncMotionProfileController> profileController = 
   AsyncMotionProfileControllerBuilder()
     .withLimits({
