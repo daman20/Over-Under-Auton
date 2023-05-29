@@ -1,4 +1,5 @@
 #include "main.h"
+#include "autoSelect/selection.h"
 
 // SECTION: CONSTANTS
 
@@ -114,6 +115,8 @@ void initialize() {
   pros::lcd::initialize(); // set up screen
 
   chassis->setState(startingState);
+  
+  selector::init(); // initialize the selector library
 }
 /**
  * Runs while the robot is in the disabled state of Field Management System or
@@ -146,7 +149,9 @@ void competition_initialize() {}
  */
 void autonomous() {
 	pros::lcd::set_text(1, "Autonomous");
-  matchLoadAutoLaunch();
+  if(selector::auton == 0){
+    pros::lcd::set_text(2, "Match Load Auto Launch");
+  }
 }
 
 /**
