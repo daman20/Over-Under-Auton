@@ -81,6 +81,7 @@ void matchLoadAutoLaunch(){
     if (acornLoad.getHue() < 100 && acornLoad.getHue() > 80) { // if it is green
       launch();
     }
+    sleep(20); // delay to not overload
   }
 }
 // END SECTION: HELPER FUNCTIONS
