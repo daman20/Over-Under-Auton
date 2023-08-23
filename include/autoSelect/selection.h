@@ -5,7 +5,7 @@
 //selector configuration
 #define HUE 360
 #define DEFAULT 1
-#define AUTONS "Front", "Back", "Do Nothing"
+#define AUTONS "Left", "Right", "Do Nothing"
 
 namespace selector{
 
