@@ -150,11 +150,51 @@ void competition_initialize() {}
  */
 void autonomous() {
 	pros::lcd::set_text(1, "Autonomous");
+  // test to see if buttons work
   if(selector::auton == 0){
-    pros::lcd::set_text(2, "Match Load Auto Launch");
+    pros::lcd::set_text(2, "Skills: Match Load Auto Launch");
   }
+  if(selector::auton == 1){ // left of goal offense
+    pros::lcd::set_text(2, "Red Offense");
+  }
+  if(selector::auton == 2){ // left of goal offense
+    pros::lcd::set_text(2, "Red Defense");
+  }
+  if(selector::auton == -1){ // left of goal offense
+    pros::lcd::set_text(2, "Blue Offense");
+  }
+  if(selector::auton == -2){ // left of goal offense
+    pros::lcd::set_text(2, "Blue Defense");
+  }
+  /* // do the actual auton
+  if(selector::auton == 1 || selector::auton == -1){
+    offensive();
+  }
+  if(selector::auton == 2 || selector::auton == -2){
+    defensive();
+  }
+  */
 }
+void offensive() {
+  //set the goal location
+  goalLocation = Point{2100_mm, 1500_mm};
 
+  //turn on the intake
+  intake.moveVelocity(100);
+
+  //launch the first acorn
+  chassis->moveDistance(1500_mm);
+  chassis->turnAngle(90_deg);
+  chassis->moveDistance(300_mm);
+  launch();
+  //launch the second acorn
+  chassis->turnAngle(180_deg);
+  chassis->moveDistance(600_mm);
+  launch();
+}
+void defensive(){
+  chassis->moveDistance(500_mm);
+}
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
