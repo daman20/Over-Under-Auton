@@ -19,7 +19,7 @@ Controller controller;
 
 std::shared_ptr<OdomChassisController> chassis =
   ChassisControllerBuilder()
-    .withMotors({17, 16}, {7, -6})
+    .withMotors({17, -16}, {-7, 6})
     // blue gearset, 4 in wheel diam, 11.5 in wheel track (center-to-center distance between the wheels (center-to-center meaning the width between the centers of both wheels))
     .withDimensions(AbstractMotor::gearset::blue, {{4.25_in, 11.5_in}, imev5BlueTPR})
     // TODO: SET UP AND TUNE PID??????
