@@ -19,7 +19,7 @@ Controller controller;
 
 std::shared_ptr<OdomChassisController> chassis =
   ChassisControllerBuilder()
-    .withMotors({10, -9}, {-1, 2})
+    .withMotors({17, 16}, {7, -6})
     // blue gearset, 4 in wheel diam, 11.5 in wheel track (center-to-center distance between the wheels (center-to-center meaning the width between the centers of both wheels))
     .withDimensions(AbstractMotor::gearset::blue, {{4.25_in, 11.5_in}, imev5BlueTPR})
     // TODO: SET UP AND TUNE PID??????
@@ -81,7 +81,7 @@ void matchLoadAutoLaunch(){
     if (acornLoad.getHue() < 100 && acornLoad.getHue() > 80) { // if it is green
       launch();
     }
-    sleep(20); // delay to not overload
+    // sleep(20); // delay to not overload
   }
 }
 // END SECTION: HELPER FUNCTIONS
