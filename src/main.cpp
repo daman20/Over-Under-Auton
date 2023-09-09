@@ -5,7 +5,8 @@
 
 auto goalLocation = Point{0_in, 0_in};
 auto startingState = OdomState{0_in, 0_in, 0_deg};
-auto matchLoadZone1 = Point{106_in, 14_in};
+auto matchLoadZone1 = Point{0_in, 0_in};
+auto matchLoadZone2 = Point{0_in, 0_in};
 
 // SECTION: DEVICE CONFIGURATION
 
@@ -138,17 +139,33 @@ void autonomous() {
   if(selector::auton == 0){
     pros::lcd::set_text(2, "Skills: Match Load Auto Launch");
   }
-  if(selector::auton == 1){ // left of goal offense
+  if(selector::auton == 1){ 
     pros::lcd::set_text(2, "Red Offense");
+    startingState = OdomState{1000_mm, -1400_mm, 0_deg};
+    goalLocation = Point{1200_mm, 0_mm};
+    matchLoadZone1 = Point{-1400_mm, 1400_mm};
+    matchLoadZone2 = Point{-1400_mm, -1400_mm};
   }
-  if(selector::auton == 2){ // left of goal offense
+  if(selector::auton == 2){ 
     pros::lcd::set_text(2, "Red Defense");
+    startingState = OdomState{-1000_mm, -1400_mm, 0_deg};
+    goalLocation = Point{1200_mm, 0_mm};
+    matchLoadZone1 = Point{-1400_mm, 1400_mm};
+    matchLoadZone2 = Point{-1400_mm, -1400_mm};
   }
-  if(selector::auton == -1){ // left of goal offense
+  if(selector::auton == -1){
     pros::lcd::set_text(2, "Blue Offense");
+    startingState = OdomState{-1000_mm, 1400_mm, 180_deg};
+    goalLocation = Point{-1200_mm, 0_mm};
+    matchLoadZone1 = Point{1400_mm, 1400_mm};
+    matchLoadZone2 = Point{1400_mm, -1400_mm};
   }
-  if(selector::auton == -2){ // left of goal offense
+  if(selector::auton == -2){
     pros::lcd::set_text(2, "Blue Defense");
+    startingState = OdomState{1000_mm, 1400_mm, 180_deg};
+    goalLocation = Point{-1200_mm, 0_mm};
+    matchLoadZone1 = Point{1400_mm, 1400_mm};
+    matchLoadZone2 = Point{1400_mm, -1400_mm};
   }
   /* // do the actual auton
   if(selector::auton == 1 || selector::auton == -1){
@@ -160,8 +177,6 @@ void autonomous() {
   */
 }
 void offensive() {
-  //set the goal location
-  goalLocation = Point{2100_mm, 1500_mm};
 
   //turn on the intake
   intake.moveVelocity(100);
