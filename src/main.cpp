@@ -75,7 +75,12 @@ void launch(int numLaunches = 1) {
 void matchLoadAutoLaunch(){
   chassis->driveToPoint(matchLoadZone1); // drive to the match load zone
   // launch acorns as they are loaded
-  launch();
+  while(true){
+    if (acornLoad.getHue() < 100 && acornLoad.getHue() > 80) { // if it is green
+      launch();
+    }
+    pros::delay(20); // delay to not overload
+  }
 }
 // END SECTION: HELPER FUNCTIONS
 
