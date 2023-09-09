@@ -49,6 +49,8 @@ auto catapultLimitSwitch = ADIButton('A', false);
 // intake motor
 Motor intake(3, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
 
+// acorn touch sensor to detect whether or not an acorn is loaded
+auto acornLoad = OpticalSensor(5, OpticalSensorOutput::hue, true);
 
 // END SECTION: DEVICE CONFIGURATION
 
