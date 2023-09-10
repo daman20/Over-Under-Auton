@@ -190,6 +190,13 @@ void offensive() {
   chassis->turnAngle(180_deg);
   chassis->moveDistance(600_mm);
   launch();
+
+  // grab the team acorn
+  chassis->moveDistance(300_mm);
+  chassis->turnAngle(90_deg);
+  chassis->moveDistance(300_mm);
+  launch();
+
 }
 void defensive(){
   chassis->moveDistance(500_mm);
