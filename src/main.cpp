@@ -87,6 +87,33 @@ void matchLoadAutoLaunch(){
 }
 // END SECTION: HELPER FUNCTIONS
 
+// START SECTION AUTONOMOUS ROUTINES
+void offensive() {
+  // set drivetrain speed
+  chassis->setMaxVelocity(100);
+  //turn on the intake
+  intake.moveVelocity(100);
+
+  //launch the first acorn
+  chassis->moveDistance(1500_mm);
+  chassis->turnAngle(90_deg);
+  chassis->moveDistance(300_mm);
+  launch();
+  //launch the second acorn
+  chassis->turnAngle(180_deg);
+  chassis->moveDistance(600_mm);
+  launch();
+
+  // grab the team acorn
+  chassis->moveDistance(300_mm);
+  chassis->turnAngle(90_deg);
+  chassis->moveDistance(300_mm);
+  launch();
+
+}
+void defensive(){
+  chassis->moveDistance(500_mm);
+}
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -167,40 +194,16 @@ void autonomous() {
     matchLoadZone1 = Point{1400_mm, 1400_mm};
     matchLoadZone2 = Point{1400_mm, -1400_mm};
   }
-  /* // do the actual auton
+   // do the actual auton
   if(selector::auton == 1 || selector::auton == -1){
     offensive();
   }
   if(selector::auton == 2 || selector::auton == -2){
     defensive();
   }
-  */
+  
 }
-void offensive() {
 
-  //turn on the intake
-  intake.moveVelocity(100);
-
-  //launch the first acorn
-  chassis->moveDistance(1500_mm);
-  chassis->turnAngle(90_deg);
-  chassis->moveDistance(300_mm);
-  launch();
-  //launch the second acorn
-  chassis->turnAngle(180_deg);
-  chassis->moveDistance(600_mm);
-  launch();
-
-  // grab the team acorn
-  chassis->moveDistance(300_mm);
-  chassis->turnAngle(90_deg);
-  chassis->moveDistance(300_mm);
-  launch();
-
-}
-void defensive(){
-  chassis->moveDistance(500_mm);
-}
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
