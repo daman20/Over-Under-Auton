@@ -21,3 +21,7 @@ Remember to comment anything that isn't immediatly readable, or unlabeled parame
 
 
 Create a branch and make a pull request when its ready to be merged back into the competition code.
+
+## Usage
+
+For our purposes, offensive is when we are on the side with out goal, and defensive is when we are on the side of the other teams goal.
