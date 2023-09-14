@@ -41,8 +41,10 @@ std::shared_ptr<AsyncMotionProfileController> profileController =
 
 // end OKAPILIB Chassis
 
-// catapult motor
-Motor catapult(11, true, AbstractMotor::gearset::red, AbstractMotor::encoderUnits::degrees);
+// catapult motors
+Motor cat1(11, true, AbstractMotor::gearset::red, AbstractMotor::encoderUnits::degrees);
+Motor cat2(16, false, AbstractMotor::gearset::red, AbstractMotor::encoderUnits::degrees);
+MotorGroup catapult({cat1, cat2});
 
 // catapult touch sensor (to figure out of it is down)
 auto catapultLimitSwitch = ADIButton('A', false);
@@ -90,7 +92,7 @@ void matchLoadAutoLaunch(){
 // START SECTION AUTONOMOUS ROUTINES
 void offensive() {
   // set drivetrain speed
-  chassis->setMaxVelocity(100);
+  chassis->setMaxVelocity(400);
   //turn on the intake
   intake.moveVelocity(100);
 
@@ -218,7 +220,7 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-  chassis->getModel()->setBrakeMode(AbstractMotor::brakeMode::brake);
+  chassis->getModel()->setBrakeMode(AbstractMotor::brakeMode::coast);
   ControllerButton runCat(ControllerDigital::X);
   catapult.setBrakeMode(AbstractMotor::brakeMode::coast);
   // tank drive
