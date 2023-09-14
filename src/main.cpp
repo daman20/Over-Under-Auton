@@ -221,7 +221,7 @@ void autonomous() {
  */
 void opcontrol() {
   chassis->getModel()->setBrakeMode(AbstractMotor::brakeMode::coast);
-  ControllerButton runCat(ControllerDigital::X);
+  ControllerButton runCat(ControllerDigital::L1);
   ControllerButton runIntake(ControllerDigital::R1);
   catapult.setBrakeMode(AbstractMotor::brakeMode::coast);
   // tank drive
