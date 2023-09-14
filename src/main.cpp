@@ -3,10 +3,10 @@
 
 // SECTION: CONSTANTS
 
-auto goalLocation = Point{0_in, 0_in};
-auto startingState = OdomState{0_in, 0_in, 0_deg};
-auto matchLoadZone1 = Point{0_in, 0_in};
-auto matchLoadZone2 = Point{0_in, 0_in};
+auto startingState = OdomState{1000_mm, -1400_mm, 0_deg};
+auto goalLocation = Point{1200_mm, 0_mm};
+auto matchLoadZone1 = Point{-1400_mm, 1400_mm};
+auto matchLoadZone2 = Point{-1400_mm, -1400_mm};
 
 // SECTION: DEVICE CONFIGURATION
 
@@ -228,10 +228,11 @@ void opcontrol() {
   while (true) {
     chassis->getModel()->tank(controller.getAnalog(ControllerAnalog::leftY),
                                   controller.getAnalog(ControllerAnalog::rightY));
-        // run the catapult when X is pressed
+        // run the catapult when L1 is pressed
         if (runCat.changedToPressed()) {
           launch();
         }
+        // run intake when R1 is not pressed
         if(!runIntake.isPressed()){
           intake.moveVelocity(100);
         }
