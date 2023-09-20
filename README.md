@@ -24,4 +24,4 @@ Create a branch and make a pull request when its ready to be merged back into th
 
 ## Usage
 
-For our purposes, offensive is when we are on the side with out goal, and defensive is when we are on the side of the other teams goal.
+For our purposes, offensive is when we are on the side with our goal, and defensive is when we are on the side of the other teams goal.
