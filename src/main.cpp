@@ -222,6 +222,7 @@ void autonomous() {
 void opcontrol() {
   chassis->getModel()->setBrakeMode(AbstractMotor::brakeMode::coast);
   ControllerButton runCat(ControllerDigital::L1);
+  ControllerButton manRunCan(ControllerDigital::L2);
   ControllerButton runIntake(ControllerDigital::R1);
   catapult.setBrakeMode(AbstractMotor::brakeMode::coast);
   // tank drive
@@ -238,6 +239,12 @@ void opcontrol() {
         }
         else{
           intake.moveVelocity(-100);
+        }
+        if(manRunCan.changedToPressed()){
+          catapult.moveVelocity(100);
+        }
+        else if(manRunCan.changedToReleased()){
+          catapult.moveVelocity(0);
         }
 
     pros::delay(20);
