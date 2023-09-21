@@ -65,13 +65,13 @@ auto acornLoad = OpticalSensor(5, OpticalSensorOutput::hue, true);
 */
 void launch(int numLaunches = 1) {
   chassis->turnToPoint(goalLocation); // AIMBOT: turn to face the goal
-
+  catapult.setBrakeMode(AbstractMotor::brakeMode::brake); // set the catapult to brake to hold at the bottom
   for (int i = 0; i < numLaunches; i++) { //repeat for the number of times to launch
-    catapult.moveRelative(50, 100); // move the catapult up 50 degrees so that the acorn is launched
+    catapult.moveVelocity(100); // move the catapult down
+    pros::delay(1000); //wait so that the catapult can launch without hitting touch sensor
     // RELOAD: move the catapult down until the limit switch is pressed
-    while(!catapultLimitSwitch.isPressed()) { // check if the limit switch is not pressed, meaning the catapult isn't down
-      catapult.moveVelocity(100); // move the catapult down
-      pros::delay(20); //delay to not overload
+    while(!catapultLimitSwitch.changedToPressed()) { // check if the limit switch is not pressed, meaning the catapult isn't down
+      pros::delay(40); //delay not to overload
     }
     catapult.moveVelocity(0); // stop the catapult when done
   }
