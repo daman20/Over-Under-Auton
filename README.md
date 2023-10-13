@@ -20,7 +20,13 @@ These are the docs for our library: [https://okapilib.github.io/OkapiLib/md_docs
 Remember to comment anything that isn't immediatly readable, or unlabeled parameters 
 
 
-Create a branch and make a pull request when its ready to be merged back into the competition code.
+Create a fork and make a pull request when its ready to be merged back into the competition code.
+
+1. Create a fork via github
+2. Make your modifications to that fork
+3. Document your changes using detailed commits
+4. Make a pull request back into the main repository
+5. Send a text on the group chat letting everyone know what you did
 
 ## Usage
 
