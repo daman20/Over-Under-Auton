@@ -50,7 +50,7 @@ MotorGroup catapult({cat1, cat2});
 auto catapultLimitSwitch = ADIButton('A', false);
 
 // intake motor
-Motor intake(3, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+Motor intake(20, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
 
 // acorn touch sensor to detect whether or not an acorn is loaded
 auto acornLoad = OpticalSensor(5, OpticalSensorOutput::hue, true);
@@ -223,7 +223,8 @@ void opcontrol() {
   chassis->getModel()->setBrakeMode(AbstractMotor::brakeMode::coast);
   ControllerButton runCat(ControllerDigital::L1);
   ControllerButton manRunCan(ControllerDigital::L2);
-  ControllerButton runIntake(ControllerDigital::R1);
+  ControllerButton runIntakeIn(ControllerDigital::R1);
+  ControllerButton runIntakeOut(ControllerDigital::R2);
   catapult.setBrakeMode(AbstractMotor::brakeMode::coast);
   // tank drive
   while (true) {
@@ -234,14 +235,14 @@ void opcontrol() {
           launch();
         }
         // run intake when R1 is not pressed
-        if(!runIntake.isPressed()){
+        if(runIntakeIn.isPressed()){
           intake.moveVelocity(100);
         }
-        else{
+        if(runIntakeOut.isPressed()){
           intake.moveVelocity(-100);
         }
         if(manRunCan.changedToPressed()){
-          catapult.moveVelocity(100);
+          catapult.moveVelocity(40);
         }
         else if(manRunCan.changedToReleased()){
           catapult.moveVelocity(0);
