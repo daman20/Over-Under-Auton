@@ -42,8 +42,8 @@ std::shared_ptr<AsyncMotionProfileController> profileController =
 // end OKAPILIB Chassis
 
 // catapult motors
-Motor cat1(5, true, AbstractMotor::gearset::red, AbstractMotor::encoderUnits::degrees);
-Motor cat2(15, false, AbstractMotor::gearset::red, AbstractMotor::encoderUnits::degrees);
+Motor cat1(-5, true, AbstractMotor::gearset::red, AbstractMotor::encoderUnits::degrees);
+Motor cat2(-15, false, AbstractMotor::gearset::red, AbstractMotor::encoderUnits::degrees);
 MotorGroup catapult({cat1, cat2});
 
 // catapult touch sensor (to figure out of it is down)
