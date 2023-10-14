@@ -43,7 +43,7 @@ std::shared_ptr<AsyncMotionProfileController> profileController =
 
 // catapult motors
 Motor cat1(-5, true, AbstractMotor::gearset::red, AbstractMotor::encoderUnits::degrees);
-Motor cat2(-15, false, AbstractMotor::gearset::red, AbstractMotor::encoderUnits::degrees);
+Motor cat2(15, false, AbstractMotor::gearset::red, AbstractMotor::encoderUnits::degrees);
 MotorGroup catapult({cat1, cat2});
 
 // catapult touch sensor (to figure out of it is down)
@@ -226,6 +226,7 @@ void opcontrol() {
   ControllerButton runIntakeIn(ControllerDigital::R1);
   ControllerButton runIntakeOut(ControllerDigital::R2);
   catapult.setBrakeMode(AbstractMotor::brakeMode::coast);
+  bool isIntakeRunning = false;
   // tank drive
   while (true) {
     chassis->getModel()->tank(controller.getAnalog(ControllerAnalog::leftY),
@@ -235,14 +236,27 @@ void opcontrol() {
           launch();
         }
         // run intake when R1 is not pressed
-        if(runIntakeIn.isPressed()){
-          intake.moveVelocity(100);
+        if(runIntakeIn.changedToPressed()){
+          if(!isIntakeRunning){
+            intake.moveVelocity(600);
+            isIntakeRunning = false;
+          }
+          else{
+            intake.moveVelocity(0);
+          }
         }
-        if(runIntakeOut.isPressed()){
-          intake.moveVelocity(-100);
+        if(runIntakeOut.changedToPressed()){
+          if(!isIntakeRunning){
+            intake.moveVelocity(-150);
+            isIntakeRunning = false;
+          }
+          else{
+            intake.moveVelocity(0);
+          }
+
         }
         if(manRunCan.changedToPressed()){
-          catapult.moveVelocity(40);
+          catapult.moveVelocity(-500);
         }
         else if(manRunCan.changedToReleased()){
           catapult.moveVelocity(0);
