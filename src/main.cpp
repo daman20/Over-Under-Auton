@@ -70,11 +70,12 @@ void launch(int numLaunches = 1, bool aimbot = false) {
   catapult.setBrakeMode(AbstractMotor::brakeMode::brake); // set the catapult to brake to hold at the bottom
   for (int i = 0; i < numLaunches; i++) { //repeat for the number of times to launch
     catapult.moveVelocity(-100); // move the catapult down
-    pros::delay(1000); //wait so that the catapult can launch without hitting touch sensor
+    pros::delay(1500); //wait so that the catapult can launch without hitting touch sensor
     // RELOAD: move the catapult down until the limit switch is pressed
     while(!catapultLimitSwitch.changedToPressed()) { // check if the limit switch is not pressed, meaning the catapult isn't down
       pros::delay(40); //delay not to overload
     }
+    pros::delay(5);
     catapult.moveVelocity(0); // stop the catapult when done
   }
 }
@@ -227,6 +228,7 @@ void opcontrol() {
   ControllerButton manRunCan(ControllerDigital::L2);
   ControllerButton runIntakeIn(ControllerDigital::R1);
   ControllerButton runIntakeOut(ControllerDigital::R2);
+  ControllerButton IntakeStop(ControllerDigital::X);
   catapult.setBrakeMode(AbstractMotor::brakeMode::coast);
   bool isIntakeRunning = false;
   // tank drive
@@ -258,7 +260,10 @@ void opcontrol() {
 
         }
         if(manRunCan.changedToPressed()){
-          launch(1, true);
+          catapult.moveVelocity(-100);
+        }
+        if(IntakeStop.changedToPressed()){
+          intake.moveVelocity(0);
         }
 
     pros::delay(20);
