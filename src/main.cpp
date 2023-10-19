@@ -63,8 +63,10 @@ auto acornLoad = OpticalSensor(5, OpticalSensorOutput::hue, true);
  * @brief: catapult control function
  * @param: number of times to launch
 */
-void launch(int numLaunches = 1) {
-  chassis->turnToPoint(goalLocation); // AIMBOT: turn to face the goal
+void launch(int numLaunches = 1, bool aimbot = false) {
+  if(aimbot){
+    chassis->turnToPoint(goalLocation); // AIMBOT: turn to face the goal
+  }
   catapult.setBrakeMode(AbstractMotor::brakeMode::brake); // set the catapult to brake to hold at the bottom
   for (int i = 0; i < numLaunches; i++) { //repeat for the number of times to launch
     catapult.moveVelocity(100); // move the catapult down
@@ -256,10 +258,7 @@ void opcontrol() {
 
         }
         if(manRunCan.changedToPressed()){
-          catapult.moveVelocity(-500);
-        }
-        else if(manRunCan.changedToReleased()){
-          catapult.moveVelocity(0);
+          launch(1, true);
         }
 
     pros::delay(20);
