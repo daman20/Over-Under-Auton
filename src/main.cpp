@@ -55,6 +55,8 @@ Motor intake(20, false, AbstractMotor::gearset::green, AbstractMotor::encoderUni
 // acorn touch sensor to detect whether or not an acorn is loaded
 auto acornLoad = OpticalSensor(5, OpticalSensorOutput::hue, true);
 
+pros::ADIDigitalOut intakePneu ('H');
+
 // END SECTION: DEVICE CONFIGURATION
 
 // START SECTION: HELPER FUNCTIONS
@@ -229,7 +231,9 @@ void opcontrol() {
   ControllerButton runIntakeIn(ControllerDigital::R1);
   ControllerButton runIntakeOut(ControllerDigital::R2);
   ControllerButton IntakeStop(ControllerDigital::X);
+  ControllerButton moveIntakePneu(ControllerDigital::A);
   catapult.setBrakeMode(AbstractMotor::brakeMode::coast);
+  bool intakeUp = false;
   bool isIntakeRunning = false;
   // tank drive
   while (true) {
@@ -264,6 +268,10 @@ void opcontrol() {
         }
         if(IntakeStop.changedToPressed()){
           intake.moveVelocity(0);
+        }
+        if(moveIntakePneu.changedToPressed()){
+          intakePneu.set_value(!intakeUp);
+          intakeUp = !intakeUp;
         }
 
     pros::delay(20);
