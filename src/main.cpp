@@ -73,7 +73,7 @@ void launch(int numLaunches = 1, bool aimbot = false) {
   catapult.setBrakeMode(AbstractMotor::brakeMode::brake); // set the catapult to brake to hold at the bottom
   for (int i = 0; i < numLaunches; i++) { //repeat for the number of times to launch
     catapult.moveVelocity(-100); // move the catapult down
-    pros::delay(1500); //wait so that the catapult can launch without hitting touch sensor
+    pros::delay(1000); //wait so that the catapult can launch without hitting touch sensor
     // RELOAD: move the catapult down until the limit switch is pressed
     while(!catapultLimitSwitch.changedToPressed()) { // check if the limit switch is not pressed, meaning the catapult isn't down
       pros::delay(40); //delay not to overload
@@ -267,7 +267,7 @@ void opcontrol() {
 
         }
         if(manRunCan.changedToPressed()){
-          catapult.moveVelocity(-100);
+          launch(1, true);
         }
         if(IntakeStop.changedToPressed()){
           intake.moveVelocity(0);
