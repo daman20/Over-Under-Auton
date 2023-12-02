@@ -57,6 +57,7 @@ auto acornLoad = OpticalSensor(5, OpticalSensorOutput::hue, true);
 
 pros::ADIDigitalOut intakePneu ('H');
 pros::ADIDigitalOut wings ('C');
+pros::ADIDigitalOut matchLoadArm ('G');
 
 // END SECTION: DEVICE CONFIGURATION
 
@@ -234,10 +235,12 @@ void opcontrol() {
   ControllerButton IntakeStop(ControllerDigital::X);
   ControllerButton moveIntakePneu(ControllerDigital::A);
   ControllerButton toggleWings(ControllerDigital::B);
+  ControllerButton moveMatchLoadArm(ControllerDigital::Y);
   catapult.setBrakeMode(AbstractMotor::brakeMode::coast);
   bool wingsOut = false;
   bool intakeUp = false;
   bool isIntakeRunning = false;
+  bool matchLoadArmState = false;
   // tank drive
   while (true) {
     chassis->getModel()->tank(controller.getAnalog(ControllerAnalog::leftY),
@@ -280,6 +283,11 @@ void opcontrol() {
           wings.set_value(!wingsOut);
           wingsOut = !wingsOut;
         }
+        if(moveMatchLoadArm.changedToPressed()){
+          matchLoadArm.set_value(!matchLoadArmState);
+          matchLoadArmState = !matchLoadArmState;
+        }
+        
 
     pros::delay(20);
     
