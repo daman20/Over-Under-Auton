@@ -56,7 +56,7 @@ Motor intake(20, false, AbstractMotor::gearset::green, AbstractMotor::encoderUni
 auto acornLoad = OpticalSensor(5, OpticalSensorOutput::hue, true);
 
 
-pros::ADIDigitalOut matchLoadArm ('G');
+pros::ADIDigitalOut matchLoadArm ('H');
 
 // END SECTION: DEVICE CONFIGURATION
 
