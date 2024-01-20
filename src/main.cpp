@@ -55,8 +55,7 @@ Motor intake(20, false, AbstractMotor::gearset::green, AbstractMotor::encoderUni
 // acorn touch sensor to detect whether or not an acorn is loaded
 auto acornLoad = OpticalSensor(5, OpticalSensorOutput::hue, true);
 
-pros::ADIDigitalOut intakePneu ('H');
-pros::ADIDigitalOut wings ('C');
+
 pros::ADIDigitalOut matchLoadArm ('G');
 
 // END SECTION: DEVICE CONFIGURATION
@@ -233,12 +232,9 @@ void opcontrol() {
   ControllerButton runIntakeIn(ControllerDigital::R1);
   ControllerButton runIntakeOut(ControllerDigital::R2);
   ControllerButton IntakeStop(ControllerDigital::X);
-  ControllerButton moveIntakePneu(ControllerDigital::A);
-  ControllerButton toggleWings(ControllerDigital::B);
   ControllerButton moveMatchLoadArm(ControllerDigital::Y);
   catapult.setBrakeMode(AbstractMotor::brakeMode::coast);
-  bool wingsOut = false;
-  bool intakeUp = false;
+
   bool isIntakeRunning = false;
   bool matchLoadArmState = false;
   // tank drive
@@ -275,14 +271,7 @@ void opcontrol() {
         if(IntakeStop.changedToPressed()){
           intake.moveVelocity(0);
         }
-        if(moveIntakePneu.changedToPressed()){
-          intakePneu.set_value(!intakeUp);
-          intakeUp = !intakeUp;
-        }
-        if(toggleWings.changedToPressed()){
-          wings.set_value(!wingsOut);
-          wingsOut = !wingsOut;
-        }
+
         if(moveMatchLoadArm.changedToPressed()){
           matchLoadArm.set_value(!matchLoadArmState);
           matchLoadArmState = !matchLoadArmState;
