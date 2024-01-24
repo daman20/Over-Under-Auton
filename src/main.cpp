@@ -56,7 +56,9 @@ Motor intake(20, false, AbstractMotor::gearset::green, AbstractMotor::encoderUni
 auto acornLoad = OpticalSensor(5, OpticalSensorOutput::hue, true);
 
 
+
 pros::ADIDigitalOut matchLoadArm ('H');
+
 
 // END SECTION: DEVICE CONFIGURATION
 
@@ -233,10 +235,10 @@ void opcontrol() {
   ControllerButton runIntakeOut(ControllerDigital::R2);
   ControllerButton IntakeStop(ControllerDigital::X);
   ControllerButton moveMatchLoadArm(ControllerDigital::Y);
+
   catapult.setBrakeMode(AbstractMotor::brakeMode::coast);
 
   bool isIntakeRunning = false;
-  bool matchLoadArmState = false;
   // tank drive
   while (true) {
     chassis->getModel()->tank(controller.getAnalog(ControllerAnalog::leftY),
@@ -275,6 +277,7 @@ void opcontrol() {
         if(moveMatchLoadArm.changedToPressed()){
           matchLoadArm.set_value(!matchLoadArmState);
           matchLoadArmState = !matchLoadArmState;
+
         }
         
 
