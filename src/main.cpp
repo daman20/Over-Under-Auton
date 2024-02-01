@@ -46,6 +46,11 @@ Motor cat1(-5, true, AbstractMotor::gearset::red, AbstractMotor::encoderUnits::d
 Motor cat2(15, false, AbstractMotor::gearset::red, AbstractMotor::encoderUnits::degrees);
 MotorGroup catapult({cat1, cat2});
 
+// arm motor group
+Motor wings1(10, false, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+Motor wings2(19, true, AbstractMotor::gearset::green, AbstractMotor::encoderUnits::degrees);
+MotorGroup wings ({wings1, wings2});
+
 // catapult touch sensor (to figure out of it is down)
 auto catapultLimitSwitch = ADIButton('A', false);
 
@@ -55,10 +60,9 @@ Motor intake(20, false, AbstractMotor::gearset::green, AbstractMotor::encoderUni
 // acorn touch sensor to detect whether or not an acorn is loaded
 auto acornLoad = OpticalSensor(5, OpticalSensorOutput::hue, true);
 
-
+bool wingsOut = false;
 
 pros::ADIDigitalOut matchLoadArm ('H');
-
 
 // END SECTION: DEVICE CONFIGURATION
 
@@ -94,6 +98,19 @@ void matchLoadAutoLaunch(){
     }
     pros::delay(20); // delay to not overload
   }
+}
+
+void alternateWings(){
+  wings1.setBrakeMode(AbstractMotor::brakeMode::brake);
+  wings2.setBrakeMode(AbstractMotor::brakeMode::brake);
+
+  if(!wingsOut){
+    wings.moveAbsolute(0, 60);
+  }
+  else{
+    wings.moveAbsolute(95, 90);
+  }
+  wingsOut = !wingsOut;
 }
 // END SECTION: HELPER FUNCTIONS
 
@@ -235,10 +252,11 @@ void opcontrol() {
   ControllerButton runIntakeOut(ControllerDigital::R2);
   ControllerButton IntakeStop(ControllerDigital::X);
   ControllerButton moveMatchLoadArm(ControllerDigital::Y);
-
+  ControllerButton alternateWingsButton(ControllerDigital::up);
   catapult.setBrakeMode(AbstractMotor::brakeMode::coast);
 
   bool isIntakeRunning = false;
+  bool matchLoadArmState = false;
   // tank drive
   while (true) {
     chassis->getModel()->tank(controller.getAnalog(ControllerAnalog::leftY),
@@ -277,9 +295,10 @@ void opcontrol() {
         if(moveMatchLoadArm.changedToPressed()){
           matchLoadArm.set_value(!matchLoadArmState);
           matchLoadArmState = !matchLoadArmState;
-
         }
-        
+        if(alternateWingsButton.changedToPressed()){
+          alternateWings();
+        }
 
     pros::delay(20);
     
