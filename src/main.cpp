@@ -1,5 +1,4 @@
 #include "main.h"
-#include "autoSelect/selection.h"
 
 // SECTION: CONSTANTS
 
@@ -156,7 +155,6 @@ void initialize() {
 
   chassis->setState(startingState);
   
-  selector::init(); // initialize the selector library
   launch();
 }
 /**
@@ -191,43 +189,83 @@ void competition_initialize() {}
 void autonomous() {
 	pros::lcd::set_text(1, "Autonomous");
   // test to see if buttons work
-  if(selector::auton == 0){
+  int autonSelection = 1;
+  if(autonSelection == 0){
     pros::lcd::set_text(2, "Skills: Match Load Auto Launch");
+    //put down match load bar
+    matchLoadArm.set_value(true);
+
+    //turn left 45 degrees
+    chassis->turnAngle(-45_deg);
+
+    intake.moveVelocity(100);
+    
+    launch(15,false);
   }
-  if(selector::auton == 1){ 
+  if(autonSelection == 1){ 
     pros::lcd::set_text(2, "Red Offense");
-    startingState = OdomState{1000_mm, -1400_mm, 0_deg};
-    goalLocation = Point{1200_mm, 0_mm};
-    matchLoadZone1 = Point{-1400_mm, 1400_mm};
-    matchLoadZone2 = Point{-1400_mm, -1400_mm};
+    
+    //put down match load bar
+    matchLoadArm.set_value(true);
+
+    //turn left 45 degrees
+    chassis->turnAngle(-45_deg);
+
+    intake.moveVelocity(100);
+    
+    launch(15,false);
   }
-  if(selector::auton == 2){ 
+  if(autonSelection == 2){ 
     pros::lcd::set_text(2, "Red Defense");
-    startingState = OdomState{-1000_mm, -1400_mm, 0_deg};
-    goalLocation = Point{1200_mm, 0_mm};
-    matchLoadZone1 = Point{-1400_mm, 1400_mm};
-    matchLoadZone2 = Point{-1400_mm, -1400_mm};
+    
+    //put down match load bar
+    matchLoadArm.set_value(true);
+
+
+    // turn right 90 degrees
+    chassis->turnAngle(90_deg);
+    // move forward 1.5 meters
+    chassis->moveDistance(1500_mm);
+
+    //turn left 45 degrees
+    chassis->turnAngle(-45_deg);
+
+    intake.moveVelocity(100);
+
+    launch(15,false);
+
   }
-  if(selector::auton == -1){
+  if(autonSelection == -1){
     pros::lcd::set_text(2, "Blue Offense");
-    startingState = OdomState{-1000_mm, 1400_mm, 180_deg};
-    goalLocation = Point{-1200_mm, 0_mm};
-    matchLoadZone1 = Point{1400_mm, 1400_mm};
-    matchLoadZone2 = Point{1400_mm, -1400_mm};
+
+    //put down match load bar
+    matchLoadArm.set_value(true);
+
+
+    // turn right 90 degrees
+    chassis->turnAngle(90_deg);
+    // move forward 1.5 meters
+    chassis->moveDistance(1500_mm);
+
+    //turn left 45 degrees
+    chassis->turnAngle(-45_deg);
+
+    intake.moveVelocity(100);
+
+    launch(15,false);
   }
-  if(selector::auton == -2){
+  if(autonSelection == -2){
     pros::lcd::set_text(2, "Blue Defense");
-    startingState = OdomState{1000_mm, 1400_mm, 180_deg};
-    goalLocation = Point{-1200_mm, 0_mm};
-    matchLoadZone1 = Point{1400_mm, 1400_mm};
-    matchLoadZone2 = Point{1400_mm, -1400_mm};
-  }
-   // do the actual auton
-  if(selector::auton == 1 || selector::auton == -1){
-    offensive();
-  }
-  if(selector::auton == 2 || selector::auton == -2){
-    defensive();
+
+    //put down match load bar
+    matchLoadArm.set_value(true);
+
+    //turn left 45 degrees
+    chassis->turnAngle(-45_deg);
+
+    intake.moveVelocity(100);
+    
+    launch(15,false);
   }
   
 }
@@ -264,7 +302,7 @@ void opcontrol() {
                                   controller.getAnalog(ControllerAnalog::rightY));
         // run the catapult when L1 is pressed
         if (runCat.changedToPressed()) {
-          launch();
+          launch(1, false);
         }
         // run intake when R1 is not pressed
         if(runIntakeIn.changedToPressed()){
@@ -287,7 +325,11 @@ void opcontrol() {
 
         }
         if(manRunCan.changedToPressed()){
-          launch(1, true);
+          catapult.moveVelocity(-100);
+        }
+        if(manRunCan.changedToReleased()){
+          catapult.moveVelocity(0);
+          launch(1,false);
         }
         if(IntakeStop.changedToPressed()){
           intake.moveVelocity(0);
