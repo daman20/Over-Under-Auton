@@ -157,6 +157,7 @@ void initialize() {
   chassis->setState(startingState);
   
   selector::init(); // initialize the selector library
+  launch();
 }
 /**
  * Runs while the robot is in the disabled state of Field Management System or
