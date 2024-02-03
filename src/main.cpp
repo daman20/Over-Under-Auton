@@ -15,13 +15,14 @@ Controller controller;
 
 
 
+
 // okapilib Chassis
 
 std::shared_ptr<OdomChassisController> chassis =
   ChassisControllerBuilder()
     .withMotors({17, -16}, {-7, 6})
-    // blue gearset, 4 in wheel diam, 11.5 in wheel track (center-to-center distance between the wheels (center-to-center meaning the width between the centers of both wheels))
-    .withDimensions(AbstractMotor::gearset::blue, {{4.25_in, 11.5_in}, imev5BlueTPR})
+    // blue gearset, 4 in wheel diam, 5 in wheel track (center-to-center distance between the wheels (center-to-center meaning the width between the centers of both wheels))
+    .withDimensions(AbstractMotor::gearset::blue, {{15_in, 5_in}, imev5BlueTPR})
     // TODO: SET UP AND TUNE PID??????
     .withMaxVelocity(100)
     .withOdometry()
@@ -59,7 +60,7 @@ Motor intake(20, false, AbstractMotor::gearset::green, AbstractMotor::encoderUni
 // acorn touch sensor to detect whether or not an acorn is loaded
 auto acornLoad = OpticalSensor(5, OpticalSensorOutput::hue, true);
 
-bool wingsOut = false;
+bool wingsOut = true;
 
 pros::ADIDigitalOut matchLoadArm ('H');
 
@@ -155,7 +156,12 @@ void initialize() {
 
   chassis->setState(startingState);
   
+  // set match load arm in
+  matchLoadArm.set_value(true);
+
   launch();
+
+  // autonomous();
 }
 /**
  * Runs while the robot is in the disabled state of Field Management System or
@@ -173,7 +179,9 @@ void disabled() {}
  * This task will exit when the robot is enabled and autonomous or opcontrol
  * starts.
  */
-void competition_initialize() {}
+void competition_initialize() {
+  launch(1,false);
+}
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -187,86 +195,107 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-	pros::lcd::set_text(1, "Autonomous");
-  // test to see if buttons work
-  int autonSelection = 1;
-  if(autonSelection == 0){
-    pros::lcd::set_text(2, "Skills: Match Load Auto Launch");
-    //put down match load bar
-    matchLoadArm.set_value(true);
+	//pros::lcd::set_text(1, "Autonomous");
+  matchLoadArm.set_value(true);
+  
+  // pros::lcd::set_text(2, "Part 1");
 
-    //turn left 45 degrees
-    chassis->turnAngle(-45_deg);
+  intake.moveVelocity(-100);
+  
+  chassis->turnAngle(-1050_deg);
+  alternateWings();
+  chassis->moveDistance(8.5_ft);
+  chassis->turnAngle(1050_deg);
+  chassis->moveDistance(8.5_ft);
 
-    intake.moveVelocity(100);
+
+  // int autonSelection = 0;
+  // // For our purposes, offensive is when we are on the side with our goal, and defensive is when we are on the side of the other teams goal.
+  
+  // launch(1,false);
+
+  // if(autonSelection == 0){
+  //   pros::lcd::set_text(2, "Skills: Match Load Auto Launch");
+  //   //put down match load bar
+  //   matchLoadArm.set_value(true);
+  //   pros::lcd::set_text(2, "Part 1");
+
+  //   intake.moveVelocity(-100);
+
+  //   chassis->moveRaw(600);
+  //   // chassis->moveDistance(8_ft);
+  //   //turn left 45 degrees
+  //   // chassis->turnAngle(900_deg);
     
-    launch(15,false);
-  }
-  if(autonSelection == 1){ 
-    pros::lcd::set_text(2, "Red Offense");
     
-    //put down match load bar
-    matchLoadArm.set_value(true);
-
-    //turn left 45 degrees
-    chassis->turnAngle(-45_deg);
-
-    intake.moveVelocity(100);
     
-    launch(15,false);
-  }
-  if(autonSelection == 2){ 
-    pros::lcd::set_text(2, "Red Defense");
+  //   launch(15,false);
+  // }
+  // if(autonSelection == 1){ 
+  //   pros::lcd::set_text(2, "Red Offense");
     
-    //put down match load bar
-    matchLoadArm.set_value(true);
+  //   //put down match load bar
+  //   matchLoadArm.set_value(true);
 
+  //   //turn left 45 degrees
+  //   chassis->turnAngle(-45_deg);
 
-    // turn right 90 degrees
-    chassis->turnAngle(90_deg);
-    // move forward 1.5 meters
-    chassis->moveDistance(1500_mm);
-
-    //turn left 45 degrees
-    chassis->turnAngle(-45_deg);
-
-    intake.moveVelocity(100);
-
-    launch(15,false);
-
-  }
-  if(autonSelection == -1){
-    pros::lcd::set_text(2, "Blue Offense");
-
-    //put down match load bar
-    matchLoadArm.set_value(true);
-
-
-    // turn right 90 degrees
-    chassis->turnAngle(90_deg);
-    // move forward 1.5 meters
-    chassis->moveDistance(1500_mm);
-
-    //turn left 45 degrees
-    chassis->turnAngle(-45_deg);
-
-    intake.moveVelocity(100);
-
-    launch(15,false);
-  }
-  if(autonSelection == -2){
-    pros::lcd::set_text(2, "Blue Defense");
-
-    //put down match load bar
-    matchLoadArm.set_value(true);
-
-    //turn left 45 degrees
-    chassis->turnAngle(-45_deg);
-
-    intake.moveVelocity(100);
+  //   intake.moveVelocity(100);
     
-    launch(15,false);
-  }
+  //   launch(15,false);
+  // }
+  // if(autonSelection == 2){ 
+  //   pros::lcd::set_text(2, "Red Defense");
+    
+  //   //put down match load bar
+  //   matchLoadArm.set_value(true);
+
+
+  //   // turn right 90 degrees
+  //   chassis->turnAngle(90_deg);
+  //   // move forward 1.5 meters
+  //   chassis->moveDistance(1500_mm);
+
+  //   //turn left 45 degrees
+  //   chassis->turnAngle(-45_deg);
+
+  //   intake.moveVelocity(100);
+
+  //   launch(15,false);
+
+  // }
+  // if(autonSelection == -1){
+  //   pros::lcd::set_text(2, "Blue Offense");
+
+  //   //put down match load bar
+  //   matchLoadArm.set_value(true);
+
+
+  //   // turn right 90 degrees
+  //   chassis->turnAngle(90_deg);
+  //   // move forward 1.5 meters
+  //   chassis->moveDistance(1500_mm);
+
+  //   //turn left 45 degrees
+  //   chassis->turnAngle(-45_deg);
+
+  //   intake.moveVelocity(100);
+
+  //   launch(15,false);
+  // }
+  // if(autonSelection == -2){
+  //   pros::lcd::set_text(2, "Blue Defense");
+
+  //   //put down match load bar
+  //   matchLoadArm.set_value(true);
+
+  //   //turn left 45 degrees
+  //   chassis->turnAngle(-45_deg);
+
+  //   intake.moveVelocity(100);
+    
+  //   launch(15,false);
+  // }
   
 }
 
