@@ -196,18 +196,27 @@ void competition_initialize() {
  */
 void autonomous() {
 	//pros::lcd::set_text(1, "Autonomous");
-  matchLoadArm.set_value(true);
+  // matchLoadArm.set_value(false);
   
   // pros::lcd::set_text(2, "Part 1");
-
-  intake.moveVelocity(-100);
   
+  chassis->moveDistance(35_ft);
+  chassis->turnAngle(-2000_deg);
+
+  chassis->turnAngle(-4000_deg);
+
+  chassis->setMaxVelocity(400);
+
+  alternateWings();
+  chassis->moveDistance(-8_ft);
+  chassis->moveDistance(8_ft);
+  /* FOR GETTING CORNER
   chassis->turnAngle(-1050_deg);
   alternateWings();
   chassis->moveDistance(8.5_ft);
   chassis->turnAngle(1050_deg);
   chassis->moveDistance(8.5_ft);
-
+  */
 
   // int autonSelection = 0;
   // // For our purposes, offensive is when we are on the side with our goal, and defensive is when we are on the side of the other teams goal.
