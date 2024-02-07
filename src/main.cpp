@@ -166,6 +166,7 @@ void initialize() {
   intake.setVoltageLimit(12000);
 
   launch();
+  wings.setBrakeMode(AbstractMotor::brakeMode::hold);
 
   
   // autonomous();
