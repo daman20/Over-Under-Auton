@@ -22,7 +22,7 @@ std::shared_ptr<OdomChassisController> chassis =
   ChassisControllerBuilder()
     .withMotors({17, -16}, {-7, 6})
     // blue gearset, 4 in wheel diam, 5 in wheel track (center-to-center distance between the wheels (center-to-center meaning the width between the centers of both wheels))
-    .withDimensions(AbstractMotor::gearset::blue, {{15_in, 5_in}, imev5BlueTPR})
+    .withDimensions(AbstractMotor::gearset::blue, {{4.25_in, 14_in}, (imev5BlueTPR*84/36)})
     // TODO: SET UP AND TUNE PID??????
     .withMaxVelocity(100)
     .withOdometry()
@@ -161,6 +161,7 @@ void initialize() {
 
   launch();
 
+  
   // autonomous();
 }
 /**
