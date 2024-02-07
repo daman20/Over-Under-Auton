@@ -188,7 +188,6 @@ void disabled() {}
  * starts.
  */
 void competition_initialize() {
-  launch(1,false);
 }
 
 /**
@@ -203,11 +202,9 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-	//pros::lcd::set_text(1, "Autonomous");
-  // matchLoadArm.set_value(false);
-  
-  // pros::lcd::set_text(2, "Part 1");
-  
+	
+  launch(1, false); // ensure catapult at bottom
+
 
   // SECTION: MATCH LOAD BALL
 
