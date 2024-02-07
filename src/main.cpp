@@ -22,7 +22,7 @@ std::shared_ptr<OdomChassisController> chassis =
   ChassisControllerBuilder()
     .withMotors({17, -16}, {-7, 6})
     // blue gearset, 4 in wheel diam, 5 in wheel track (center-to-center distance between the wheels (center-to-center meaning the width between the centers of both wheels))
-    .withDimensions(AbstractMotor::gearset::blue, {{4.25_in, 14_in}, (imev5BlueTPR*84/36)})
+    .withDimensions(AbstractMotor::gearset::blue, {{4.25_in, 13_in}, (imev5BlueTPR*84/36)})
     // TODO: SET UP AND TUNE PID??????
     .withMaxVelocity(100)
     .withOdometry()
@@ -105,10 +105,14 @@ void alternateWings(){
   wings2.setBrakeMode(AbstractMotor::brakeMode::brake);
 
   if(!wingsOut){
-    wings.moveAbsolute(0, 60);
+    wings.moveVelocity(-100);
+    pros::delay(500);
+    wings.moveVelocity(0);
   }
   else{
-    wings.moveAbsolute(95, 90);
+    wings.moveVelocity(100);
+    pros::delay(500);
+    wings.moveVelocity(0);
   }
   wingsOut = !wingsOut;
 }
@@ -159,6 +163,8 @@ void initialize() {
   // set match load arm in
   matchLoadArm.set_value(true);
 
+  intake.setVoltageLimit(12000);
+
   launch();
 
   
@@ -201,22 +207,45 @@ void autonomous() {
   
   // pros::lcd::set_text(2, "Part 1");
   
-  chassis->moveDistance(35_ft);
-  chassis->turnAngle(-2000_deg);
 
-  chassis->turnAngle(-4000_deg);
+  // SECTION: MATCH LOAD BALL
 
-  chassis->setMaxVelocity(400);
+  chassis->setMaxVelocity(200);
+
+
+  chassis->moveDistance(5_ft);
+  chassis->turnAngle(-90_deg);
+
+  intake.moveVelocity(100);
+  pros::delay(1000);
+  chassis->turnAngle(-180_deg);
+
+  
 
   alternateWings();
-  chassis->moveDistance(-8_ft);
-  chassis->moveDistance(8_ft);
+  chassis->moveDistance(-2_ft);
+
+  pros::delay(1000);
+
+  chassis->moveDistance(2_ft);
+
+  alternateWings();
+
+  // SECTION: Middle Triball
+  intake.moveVelocity(-100);
+  chassis->moveDistance(4_ft);
+  intake.moveVelocity(0);
+  chassis->turnAngle(180_deg);
+  chassis->moveDistance(4_ft);
+  intake.moveVelocity(100);
+
+
   /* FOR GETTING CORNER
-  chassis->turnAngle(-1050_deg);
+  chassis->turnAngle(-45_deg);
   alternateWings();
-  chassis->moveDistance(8.5_ft);
-  chassis->turnAngle(1050_deg);
-  chassis->moveDistance(8.5_ft);
+  chassis->moveDistance(2_ft);
+  chassis->turnAngle(45_deg);
+  chassis->moveDistance(2_ft);
   */
 
   // int autonSelection = 0;
