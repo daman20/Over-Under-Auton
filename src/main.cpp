@@ -169,7 +169,7 @@ void initialize() {
 
   wings.setBrakeMode(AbstractMotor::brakeMode::brake);
   
-  autonomous();
+  //autonomous();
 }
 /**
  * Runs while the robot is in the disabled state of Field Management System or
@@ -362,14 +362,12 @@ void opcontrol() {
   ControllerButton manRunCan(ControllerDigital::L2);
   ControllerButton runIntakeIn(ControllerDigital::R1);
   ControllerButton runIntakeOut(ControllerDigital::R2);
-  ControllerButton IntakeStop(ControllerDigital::X);
   ControllerButton moveMatchLoadArm(ControllerDigital::Y);
   ControllerButton alternateWingsButton(ControllerDigital::up);
   catapult.setBrakeMode(AbstractMotor::brakeMode::coast);
   launch();
   
 
-  bool isIntakeRunning = false;
   bool matchLoadArmState = false;
   // tank drive
   while (true) {
@@ -379,25 +377,18 @@ void opcontrol() {
         if (runCat.changedToPressed()) {
           launch(1, false);
         }
-        // run intake when R1 is not pressed
-        if(runIntakeIn.changedToPressed()){
-          if(!isIntakeRunning){
-            intake.moveVelocity(600);
-            isIntakeRunning = false;
-          }
-          else{
-            intake.moveVelocity(0);
-          }
+        if(runIntakeIn.isPressed()){
+          intake.moveVelocity(600);
         }
-        if(runIntakeOut.changedToPressed()){
-          if(!isIntakeRunning){
-            intake.moveVelocity(-150);
-            isIntakeRunning = false;
-          }
-          else{
-            intake.moveVelocity(0);
-          }
+        if(runIntakeIn.changedToReleased()){
+          intake.moveVelocity(0);
+        }
 
+        if(runIntakeOut.isPressed()){
+          intake.moveVelocity(-150);
+        }
+        if(runIntakeOut.changedToReleased()){
+          intake.moveVelocity(0);
         }
         if(manRunCan.changedToPressed()){
           catapult.moveVelocity(-100);
@@ -405,9 +396,6 @@ void opcontrol() {
         if(manRunCan.changedToReleased()){
           catapult.moveVelocity(0);
           launch(1,false);
-        }
-        if(IntakeStop.changedToPressed()){
-          intake.moveVelocity(0);
         }
 
         if(moveMatchLoadArm.changedToPressed()){
