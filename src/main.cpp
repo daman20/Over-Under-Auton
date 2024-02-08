@@ -60,7 +60,7 @@ Motor intake(20, false, AbstractMotor::gearset::green, AbstractMotor::encoderUni
 // acorn touch sensor to detect whether or not an acorn is loaded
 auto acornLoad = OpticalSensor(5, OpticalSensorOutput::hue, true);
 
-bool wingsOut = true;
+bool wingsOut = false;
 
 pros::ADIDigitalOut matchLoadArm ('H');
 
@@ -105,12 +105,12 @@ void alternateWings(){
   wings2.setBrakeMode(AbstractMotor::brakeMode::brake);
 
   if(!wingsOut){
-    wings.moveVelocity(-100);
+    wings.moveVelocity(100);
     pros::delay(500);
     wings.moveVelocity(0);
   }
   else{
-    wings.moveVelocity(100);
+    wings.moveVelocity(-100);
     pros::delay(500);
     wings.moveVelocity(0);
   }
@@ -165,11 +165,11 @@ void initialize() {
 
   intake.setVoltageLimit(12000);
 
-  launch();
   wings.setBrakeMode(AbstractMotor::brakeMode::hold);
 
+  wings.setBrakeMode(AbstractMotor::brakeMode::brake);
   
-  // autonomous();
+  autonomous();
 }
 /**
  * Runs while the robot is in the disabled state of Field Management System or
@@ -208,10 +208,13 @@ void autonomous() {
 
   // SECTION: MATCH LOAD BALL
 
-  chassis->setMaxVelocity(200);
+  chassis->setMaxVelocity(300);
 
 
   chassis->moveDistance(5_ft);
+
+  matchLoadArm.set_value(true);
+
   chassis->turnAngle(-90_deg);
 
   intake.moveVelocity(100);
@@ -221,14 +224,18 @@ void autonomous() {
   
 
   alternateWings();
-  chassis->moveDistance(-2_ft);
 
+  pros::delay(1000);
+
+  chassis->moveDistance(-0.5_ft);
+  /*
   pros::delay(1000);
 
   chassis->moveDistance(2_ft);
 
   alternateWings();
-
+  */
+  /*
   // SECTION: Middle Triball
   intake.moveVelocity(-100);
   chassis->moveDistance(4_ft);
@@ -237,7 +244,7 @@ void autonomous() {
   chassis->moveDistance(4_ft);
   intake.moveVelocity(100);
 
-
+  */
   /* FOR GETTING CORNER
   chassis->turnAngle(-45_deg);
   alternateWings();
@@ -359,6 +366,8 @@ void opcontrol() {
   ControllerButton moveMatchLoadArm(ControllerDigital::Y);
   ControllerButton alternateWingsButton(ControllerDigital::up);
   catapult.setBrakeMode(AbstractMotor::brakeMode::coast);
+  launch();
+  
 
   bool isIntakeRunning = false;
   bool matchLoadArmState = false;
