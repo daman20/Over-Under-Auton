@@ -217,24 +217,27 @@ void autonomous() {
 
   matchLoadArm.set_value(true);
 
-  chassis->turnAngle(90_deg);
-
   intake.moveVelocity(100);
 
+  chassis->turnAngle(90_deg);
 
-  chassis->turnAngle(180_deg);
+
+  pros::delay(1000);
+
+  chassis->turnAngle(-180_deg);
   alternateWings();
   
 
-  // chassis->moveDistance(-0.5_ft);
-  /*
+  chassis->moveDistance(-0.2_ft);
+
+  
   pros::delay(1000);
 
   chassis->moveDistance(2_ft);
 
   alternateWings();
-  */
-  /*
+
+  
   // SECTION: Middle Triball
   intake.moveVelocity(-100);
   chassis->moveDistance(4_ft);
@@ -243,7 +246,7 @@ void autonomous() {
   chassis->moveDistance(4_ft);
   intake.moveVelocity(100);
 
-  */
+  
   /* FOR GETTING CORNER
   chassis->turnAngle(-45_deg);
   alternateWings();
