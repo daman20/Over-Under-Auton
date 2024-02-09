@@ -108,13 +108,14 @@ void alternateWings(){
     wings.moveVelocity(100);
     pros::delay(500);
     wings.moveVelocity(0);
+    wingsOut = true;
   }
   else{
     wings.moveVelocity(-100);
     pros::delay(500);
     wings.moveVelocity(0);
+    wingsOut = false;
   }
-  wingsOut = !wingsOut;
 }
 // END SECTION: HELPER FUNCTIONS
 
@@ -168,6 +169,7 @@ void initialize() {
   wings.setBrakeMode(AbstractMotor::brakeMode::hold);
 
   wings.setBrakeMode(AbstractMotor::brakeMode::brake);
+
   
   //autonomous();
 }
@@ -202,32 +204,29 @@ void competition_initialize() {
  * from where it left off.
  */
 void autonomous() {
-	
-  launch(1, false); // ensure catapult at bottom
-
+	if(!catapultLimitSwitch.isPressed()){
+      launch(1, false); // ensure catapult at bottom
+  }
 
   // SECTION: MATCH LOAD BALL
 
-  chassis->setMaxVelocity(300);
+  chassis->setMaxVelocity(200);
 
 
   chassis->moveDistance(5_ft);
 
   matchLoadArm.set_value(true);
 
-  chassis->turnAngle(-90_deg);
+  chassis->turnAngle(90_deg);
 
   intake.moveVelocity(100);
-  pros::delay(1000);
-  chassis->turnAngle(-180_deg);
 
+
+  chassis->turnAngle(180_deg);
+  alternateWings();
   
 
-  alternateWings();
-
-  pros::delay(1000);
-
-  chassis->moveDistance(-0.5_ft);
+  // chassis->moveDistance(-0.5_ft);
   /*
   pros::delay(1000);
 
