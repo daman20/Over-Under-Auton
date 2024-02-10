@@ -168,7 +168,6 @@ void initialize() {
 
   wings.setBrakeMode(AbstractMotor::brakeMode::hold);
 
-  wings.setBrakeMode(AbstractMotor::brakeMode::brake);
 
   
   //autonomous();
